@@ -1,0 +1,6 @@
+server:
+  port: 9891
+  
+spring:
+  application:
+    name: Product Microservice
