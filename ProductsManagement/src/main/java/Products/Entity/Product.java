@@ -17,5 +17,5 @@ public class Product {
 	private Category category;
 	private double price;
 	private double discount;
-	private double discountDescription;
+	private String discountDescription;
 }
