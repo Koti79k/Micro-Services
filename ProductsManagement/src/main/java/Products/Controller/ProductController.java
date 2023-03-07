@@ -2,6 +2,8 @@ package Products.Controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +28,13 @@ public class ProductController {
 	@Autowired
 	private ProductService pService;
 	
-//	private static final Logger logger=LoggerFactory.getLogger(ProductController.class);
+	private static final Logger logger=LoggerFactory.getLogger(ProductController.class);
 	
+//	if you give same id it will not create and duplicate data also not created in MongoDB
 	@PostMapping("/addProduct")
-	ResponseEntity<Product> addProduct(@RequestBody Product product){
+	ResponseEntity<Product> addProduct(@RequestBody @Valid Product product){
 		String status = pService.addProduct(product);
-//		logger.info("Product added status - {}",status);
+		logger.info("Product added status - {}",status);
 		return ResponseEntity.status(HttpStatus.CREATED).body(product);
 	}
 	
@@ -50,8 +53,10 @@ public class ProductController {
 		return pService.productById(id);
 	}
 	
+	//if you give same id it will update with that id. duplicate data also not created in MongoDB
+	//If you give another id it will create another product entity
 	@PutMapping("/updateProduct")
-	String updateProduct(@RequestBody Product product) {
+	String updateProduct(@RequestBody @Valid Product product) {
 		return pService.updateProduct(product);
 	}
 	
