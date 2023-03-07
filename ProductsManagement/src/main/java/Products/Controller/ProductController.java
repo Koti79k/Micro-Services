@@ -4,8 +4,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import Products.Entity.Product;
+import Products.Entity.ProductResponse;
 import Products.Service.ProductService;
 
 @RestController
@@ -26,16 +25,13 @@ import Products.Service.ProductService;
 public class ProductController {
 
 	@Autowired
-	private ProductService pService;
-	
-	private static final Logger logger=LoggerFactory.getLogger(ProductController.class);
+	private ProductService pService;	
 	
 //	if you give same id it will not create and duplicate data also not created in MongoDB
 	@PostMapping("/addProduct")
-	ResponseEntity<Product> addProduct(@RequestBody @Valid Product product){
-		String status = pService.addProduct(product);
-		logger.info("Product added status - {}",status);
-		return ResponseEntity.status(HttpStatus.CREATED).body(product);
+	ResponseEntity<ProductResponse> addProduct(@RequestBody @Valid Product product){
+		ProductResponse productResponse = pService.addProduct(product);
+		return ResponseEntity.status(HttpStatus.CREATED).body(productResponse);
 	}
 	
 	@GetMapping("/productList")
@@ -49,19 +45,19 @@ public class ProductController {
 	}
 	
 	@GetMapping("/product/{id}")
-	Product getProductsById(@PathVariable Integer id){
+	Product getProductsById(@PathVariable String id){
 		return pService.productById(id);
 	}
 	
 	//if you give same id it will update with that id. duplicate data also not created in MongoDB
 	//If you give another id it will create another product entity
-	@PutMapping("/updateProduct")
-	String updateProduct(@RequestBody @Valid Product product) {
-		return pService.updateProduct(product);
-	}
+    @PutMapping("/productUpdate")
+    ProductResponse updateProduct(@RequestBody Product product) {
+        return pService.updateProduct(product);
+    }
 	
 	@DeleteMapping("/product/{id}")
-	Product deleteProductsById(@PathVariable Integer id){
+	Product deleteProductsById(@PathVariable String id){
 		return pService.productById(id);
 	}
 }

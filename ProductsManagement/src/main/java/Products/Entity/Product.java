@@ -1,5 +1,7 @@
 package Products.Entity;
 
+import java.util.List;
+
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -16,7 +18,7 @@ import lombok.Setter;
 public class Product {
 
 	@Id
-	private Integer id;
+	private String id; //when i add string as id it automatically provide id
 	
 	@NotNull(message = "Product name should not be null")
 	private String name;
@@ -30,7 +32,13 @@ public class Product {
 	private String currency;
 	
 	@Max(100)
+	@Min(0)
 	private double discount;
 		
 	private String discountDescription;
+	
+    private List<String> imageURLs;
+    
 }
+
+

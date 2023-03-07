@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import Products.Entity.Product;
 
 @Repository
-public interface ProductRepo extends MongoRepository<Product, Integer>{
+public interface ProductRepo extends MongoRepository<Product, String> {
 
 	@Query("{'Category.name':?0}")
 	List<Product> findByCategory(String category);
