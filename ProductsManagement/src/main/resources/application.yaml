@@ -10,4 +10,10 @@ spring:
       host: localhost
       port: 27017
       database: shopping
+  
+  boot:
+    admin:
+      client:
+        url:
+          - http://localhost:8080    
         

@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 import Products.Entity.Product;
 import Products.Entity.ProductResponse;
 import Products.Service.ProductService;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/v1")
 public class ProductController {
@@ -31,12 +33,14 @@ public class ProductController {
 	@PostMapping("/addProduct")
 	ResponseEntity<ProductResponse> addProduct(@RequestBody @Valid Product product){
 		ProductResponse productResponse = pService.addProduct(product);
+		log.info("Product added status - {}",productResponse);
 		return ResponseEntity.status(HttpStatus.CREATED).body(productResponse);
 	}
 	
 	@GetMapping("/productList")
 	List<Product> getListOfProducts(){
-		return pService.listAllProducts();
+		List<Product> productList =  pService.listAllProducts();
+		return productList;
 	}
 	
 	@GetMapping("/productList/{category}")
