@@ -15,7 +15,7 @@ import java.io.*;
 
 @Slf4j
 @Component
-@Order(1)
+//@Order(1)
 public class RequestResponseLoggers implements Filter{
 
 	@Override
