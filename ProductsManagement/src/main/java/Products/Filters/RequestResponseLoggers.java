@@ -3,8 +3,13 @@ package Products.Filters;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.TeeOutputStream;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import Products.Entity.Product;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -18,22 +23,49 @@ import java.io.*;
 //@Order(1)
 public class RequestResponseLoggers implements Filter{
 
+	@Autowired
+	private ObjectMapper objectMapper; //for masking data
+	
 	@Override
 	 public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) 
 			 throws IOException, ServletException {
 		MyCustomHttpRequestWrapper requestWrapper = new MyCustomHttpRequestWrapper((HttpServletRequest) request);
-        log.info("Requeust URI: {}", requestWrapper.getRequestURI());
+        
+		String uri=requestWrapper.getRequestURI();
+		log.info("Requeust URI: {}",uri );
         log.info("Requeust Method: {}", requestWrapper.getMethod());
         //log.info("Request Body: {}",httpServletRequest.getInputStream().toString()); //printing byteStream
 		
+        String requestData = new String(requestWrapper.getByteArray());
+        
+        // for masking data of requestBody
+        if("/v1/addProduct".equalsIgnoreCase(uri)){
+            Product product = objectMapper.readValue(requestData, Product.class);
+
+            product.setCurrency("****");
+
+            requestData = objectMapper.writeValueAsString(product);
+        }
+        
         // printing msg in form of string by using apache.client passed body is converted to byteStream then converted to string 
-        log.info("Requeust Body: {}", new String(requestWrapper.getByteArray()));
+        log.info("Requeust Body: {}", requestData);
 		
 		MyCustomHttpResponseWrapper responseWrapper = new MyCustomHttpResponseWrapper((HttpServletResponse)response);
 		
 		chain.doFilter(requestWrapper, responseWrapper);
+		
+		String responseResult = new String(responseWrapper.getBaos().toByteArray());
+		
+		// for masking data of responseBody
+		 if("/v1/addProduct".equalsIgnoreCase(uri)){
+	            Product product = objectMapper.readValue(responseResult, Product.class);
+
+	            product.setCurrency("****");
+
+	            responseResult = objectMapper.writeValueAsString(product);
+	        }
         log.info("Response status - {}", responseWrapper.getStatus());
-        log.info("Response Body - {}", new String(responseWrapper.getBaos().toByteArray()));
+        log.info("Response Body - {}", responseResult);
 		
 	}
 	
