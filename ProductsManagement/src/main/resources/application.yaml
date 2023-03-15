@@ -16,4 +16,14 @@ spring:
       client:
         url:
           - http://localhost:8080    
+ 
+logging:
+  file:
+    name: E:\logs\product.log
+#   path: d:\logs  #spring.log   
+  logback:
+    rollingpolicy:
+      max-file-size: 50KB
+  level:
+    root: TRACE #by default it is INFO     
         
