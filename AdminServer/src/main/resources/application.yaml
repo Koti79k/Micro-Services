@@ -1,0 +1,18 @@
+server:
+  port: 8081
+
+spring:
+  mail:
+    host: sandbox.smtp.mailtrap.io
+    port: 2525
+    username: 0540e069c16379
+    password: 9357746c53f15d
+    test-connection: true
+  boot:
+    admin:
+      notify:
+        mail:
+          to:
+            - koteswararao791212@gmail.com #we will get notification in this mail
+          ignore-changes:
+            - ''      
