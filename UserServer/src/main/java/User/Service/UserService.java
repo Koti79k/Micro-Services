@@ -15,19 +15,20 @@ public class UserService {
 	@Autowired
 	private UserRepo uRepo;
 	
+	@Autowired
+	private PasswordService pService;
+	
 	public User registerUser(User user) {
         user.setInsertDate(new Date());
         user.setId(UUID.randomUUID().toString());
 
-        user.setPassword(securePassword(user.getPassword()));
+        user.setPassword(pService.securePassword(user.getPassword()));
         User savedUser = uRepo.save(user);
 
+        savedUser.setPassword("******");
         return savedUser;
 	}
 	
-    private String securePassword(String password) {
-        return null;
-    }
 }
 
 

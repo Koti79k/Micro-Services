@@ -1,6 +1,10 @@
 package User.Exception;
 
 
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,11 +12,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 
 @ControllerAdvice
 public class UserServiceExceptionHandler extends ResponseEntityExceptionHandler {
@@ -29,6 +35,25 @@ public class UserServiceExceptionHandler extends ResponseEntityExceptionHandler 
         apiError.setStatus(HttpStatus.BAD_REQUEST);
         apiError.setPath(request.getDescription(false));
 
+        return new ResponseEntity<>(
+                apiError, new HttpHeaders(), apiError.getStatus());
+    }
+    
+    @ExceptionHandler({ConstraintViolationException.class})
+    public ResponseEntity<Object> handleConstraintViolation(
+            ConstraintViolationException ex, ServletWebRequest request) {
+
+        Set<ConstraintViolation<?>> constraintViolations = ex.getConstraintViolations();
+        List<String> errors = constraintViolations
+                .stream()
+                .map(err -> err.getRootBeanClass().getName() + " " +
+                        err.getPropertyPath() + ": " + err.getMessage())
+                .collect(Collectors.toList());
+
+        ApiError apiError = new ApiError();
+        apiError.setErrors(errors);
+        apiError.setStatus(HttpStatus.BAD_REQUEST);
+        apiError.setPath(request.getRequest().getRequestURI());
         return new ResponseEntity<>(
                 apiError, new HttpHeaders(), apiError.getStatus());
     }

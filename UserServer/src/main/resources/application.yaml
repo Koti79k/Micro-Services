@@ -5,8 +5,24 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
+    properties: #for stopping validation 
+      javax:
+        persistence:
+          validation:
+            mode: none
   datasource:
     url: jdbc:mysql://localhost:3306/userdb
     driverClassName: com.mysql.cj.jdbc.Driver
     username: root
     password: Koti79@143
+
+password:      #this should be similar to PasswordConfig class
+  hashing:
+    algo:
+      argon2:
+        type: 1
+        saltLength: 16
+        hashLength: 32
+        iterations: 4
+        memory: 65586
+        parrallelism: 2    
