@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import User.Exception.UserNotFoundException;
 import User.Model.User;
 import User.Repositery.UserRepo;
 
@@ -28,6 +29,15 @@ public class UserService {
         savedUser.setPassword("******");
         return savedUser;
 	}
+	
+    public User findByEmail(String email) {
+        User user = uRepo.findByEmail(email);
+        if(user == null){
+            throw new UserNotFoundException("User not found for mail id - " + email);
+        }
+        user.setPassword("****");
+        return user;
+    }
 	
 }
 

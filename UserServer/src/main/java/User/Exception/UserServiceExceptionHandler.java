@@ -57,5 +57,15 @@ public class UserServiceExceptionHandler extends ResponseEntityExceptionHandler 
         return new ResponseEntity<>(
                 apiError, new HttpHeaders(), apiError.getStatus());
     }
+    
+    @ExceptionHandler
+    public ResponseEntity<Object> userNotFoundException(UserNotFoundException ex, ServletWebRequest request){
+        ApiError apiError = new ApiError();
+        apiError.setErrors(List.of(ex.getMessage()));
+        apiError.setStatus(HttpStatus.NOT_FOUND);
+        apiError.setPath(request.getRequest().getRequestURI());
+        return new ResponseEntity<>(
+                apiError, new HttpHeaders(), apiError.getStatus());
+    }
 
 }
