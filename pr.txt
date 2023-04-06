@@ -1,0 +1,34 @@
+
+/*============== actuator URLs ====================*/
+http://localhost:9891/actuator/health
+http://localhost:9891/actuator/info
+http://localhost:9891/actuator/httptrace
+
+/*============== springBoot Admin URLs ====================*/
+http://localhost:8081
+
+/*=========== create table users before adding data ==============*/
+create table users(
+id varchar(40) not null,
+ name varchar(20),
+  email varchar(20) unique,
+   mobile int(10) unique,
+   password varchar(100),
+   insert_date date,
+   expire_date date,
+   primary key(id)
+   );
+/*============== adding data to users table =====================*/
+{
+	"name":"Motu",
+	"email":"Koti79@gmail.com",
+    "password":"Koti",
+    "mobile":"9014595789"
+}
+
+/*============ checking hasing with Argon2 ======================*/
+{
+	"name":"Motu",
+	"email":"Koti7@gmail.com",
+    "password":"Koti79@143"
+}
